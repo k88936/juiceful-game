@@ -227,6 +227,7 @@ def main() -> None:
     mode: str = args.mode
     values = load_env(ENV_FILE)
     meta_url, env, backend = build_meta(values, juicefs)
+    bucket = required(values, "S3_BUCKET")
     cache_dir, cache_size, free_space_ratio = prepare_paths(mode)
 
     if os.path.ismount(MOUNTPOINT):
@@ -266,6 +267,10 @@ def main() -> None:
         BUFFER_SIZE,
         "--prefetch",
         "1",
+        "--storage",
+        "s3",
+        "--bucket",
+        bucket,
     ]
     if mode == "read":
         command.extend(
